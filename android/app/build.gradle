@@ -51,6 +51,12 @@ android {
         }
     }
 }
+dependencies {
+    // 添加 Material Components 依赖
+    implementation 'com.google.android.material:material:1.4.0'
+
+    // 其他依赖项...
+}
 
 flutter {
     source '../..'

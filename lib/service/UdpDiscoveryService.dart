@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wifi_info_plugin_plus/wifi_info_plugin_plus.dart';
 
 import '../router/AppRouter.dart';
 
@@ -27,7 +28,7 @@ class UdpDiscoveryService {
   void start() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     discoveryMessage = prefs.getString('device') ?? '';
-    InternetAddress ip = InternetAddress.anyIPv4;
+    String ?ip;
 
     //   为了在pc上 多个ip拿出在用的IP地址 目前规则是192.168.3
     if (!kIsWeb && Platform.isWindows) {
@@ -43,7 +44,7 @@ class UdpDiscoveryService {
             // 检查地址是否符合条件
             if (address.type == InternetAddressType.IPv4 &&
                 regex.hasMatch(address.address)) {
-              ip = address;
+              ip = address.toString();
             }
           });
         });
@@ -51,19 +52,19 @@ class UdpDiscoveryService {
     }
     // ios ip
 
-    if (Platform.isIOS) {
-      for (var interface in await NetworkInterface.list()) {
-        // 过滤获取特定的网络接口，例如 'en0' 是常见的 Wi-Fi 接口名称
-        if (interface.name == 'en0') {
-          for (var addr in interface.addresses) {
-            if (addr.type == InternetAddressType.IPv4) {
-              ip = addr;
-            }
+    if (Platform.isIOS || Platform.isAndroid) {
+      List<NetworkInterface> interfaces = await NetworkInterface.list();
+
+      // 查找 IPv4 地址，排除回环地址
+      for (NetworkInterface interface in interfaces) {
+        for (InternetAddress addr in interface.addresses) {
+          if (!addr.isLoopback && addr.type == InternetAddressType.IPv4) {
+            ip= addr.address;
           }
         }
       }
     }
-
+   if(ip==null) return;
     _socket = await RawDatagramSocket.bind(
       ip,
       port,

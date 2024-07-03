@@ -19,23 +19,24 @@ class SharedAppBar extends StatelessWidget implements PreferredSizeWidget {
       child: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: Colors.transparent,
+        elevation: 0,
         flexibleSpace: Padding(
-          padding: const EdgeInsets.only(top: 15), // 调整顶部距离为19px
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.arrow_back, size: 20),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-                Align(
-                  child: Text(title),
-                ),
-              ],
-            ),
-
+          padding: const EdgeInsets.only(top: 20), // 调整顶部距离为19px
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center, // 垂直居中对齐
+            children: [
+              IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              Align(
+                child: Text(title),
+              ),
+            ],
+          ),
         ),
       ),
     );

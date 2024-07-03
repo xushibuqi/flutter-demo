@@ -26,8 +26,8 @@
               />
             <meta-data
                     android:name="io.flutter.embedding.android.SplashScreenDrawable"
-                    android:resource="@drawable/acs"
-            />
+                    android:resource="@drawable/aaa"
+            /> 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
